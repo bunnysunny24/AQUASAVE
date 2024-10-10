@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaSave: Urban Water Conservation Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #50c878;
+            --text-color: #333333;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #87CEEB, #00BFFF, #1E90FF);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            width: calc(50% - 10px);
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                width: 100%;
+            }
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-weight: 600;
+        }
+
+        .consumption {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--secondary-color);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .input-group input,
+        .input-group select {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 1em;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .input-group button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .input-group button:hover {
+            background-color: #45b069;
+        }
+
+        #savings-badge {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        #savings-badge:hover {
+            transform: scale(1.05);
+        }
+
+        #savings-badge span:first-child {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        #leaderboard {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #leaderboard li {
+            background-color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        #leaderboard li:hover {
+            transform: translateX(5px);
+        }
+
+        #leaderboard li:nth-child(1) {
+            background-color: gold;
+            color: #333;
+        }
+
+        #leaderboard li:nth-child(2) {
+            background-color: silver;
+            color: #333;
+        }
+
+        #leaderboard li:nth-child(3) {
+            background-color: #cd7f32;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>AquaSave: Urban Water Conservation Dashboard</h1>
+    </header>
+    <div class="container">
+        <div class="dashboard">
+            <div class="card">
+                <h2>Current Consumption</h2>
+                <div class="consumption" id="current-consumption">0 L</div>
+                <div class="input-group">
+                    <input type="number" id="consumption-input" placeholder="Enter water usage (in liters)">
+                    <button onclick="updateConsumption()">Update</button>
+                </div>
+                <div class="input-group" style="margin-top: 10px;">
+                    <select id="time-range">
+                        <option value="24">Last 24 Hours</option>
+                        <option value="48">Last 48 Hours</option>
+                        <option value="168">Last Week</option>
+                    </select>
+                    <button onclick="updateTimeRange()">Apply</button>
+                </div>
+                <canvas id="consumption-chart"></canvas>
+            </div>
+            <div class="card">
+                <h2>Daily Goal</h2>
+                <div class="consumption" id="daily-goal">200 L</div>
+                <div class="input-group">
+                    <input type="number" id="goal-input" placeholder="Set new goal (in liters)">
+                    <button onclick="setNewGoal()">Set Goal</button>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Water Saving Badge</h2>
+                <div id="savings-badge">
+                    <span id="savings-percentage">0%</span>
+                    <span>Saved</span>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Neighborhood Leaderboard</h2>
+                <ul id="leaderboard">
+                    <li>1. Smith Family - 15% saved</li>
+                    <li>2. Johnson House - 12% saved</li>
+                    <li>3. Green Apartment - 10% saved</li>
+                    <li>4. Water Warriors - 8% saved</li>
+                    <li>5. Eco Enthusiasts - 7% saved</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentConsumption = 0;
+        let dailyGoal = 200;
+        let timeRange = 24;
+        const consumptionEl = document.getElementById('current-consumption');
+        const goalEl = document.getElementById('daily-goal');
+        const savingsPercentageEl = document.getElementById('savings-percentage');
+
+        function updateConsumption() {
+            const input = document.getElementById('consumption-input');
+            const newConsumption = parseFloat(input.value);
+            if (!isNaN(newConsumption) && newConsumption >= 0) {
+                currentConsumption = newConsumption;
+                consumptionEl.textContent = `${currentConsumption.toFixed(1)} L`;
+                updateSavingsBadge();
+                updateChart();
+                input.value = '';
+            }
+        }
+
+        function setNewGoal() {
+            const newGoal = document.getElementById('goal-input').value;
+            if (newGoal && newGoal > 0) {
+                dailyGoal = parseInt(newGoal);
+                goalEl.textContent = `${dailyGoal} L`;
+                updateSavingsBadge();
+            }
+        }
+
+        function updateSavingsBadge() {
+            const savingsPercentage = Math.max(0, Math.round((1 - currentConsumption / dailyGoal) * 100));
+            savingsPercentageEl.textContent = `${savingsPercentage}%`;
+        }
+
+        function updateTimeRange() {
+            timeRange = parseInt(document.getElementById('time-range').value);
+            updateChart();
+        }
+
+        // Initialize and update the chart
+        const ctx = document.getElementById('consumption-chart').getContext('2d');
+        const consumptionChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: timeRange }, (_, i) => `${i + 1}h`),
+                datasets: [{
+                    label: 'Water Consumption (L)',
+                    data: Array.from({ length: timeRange }, () => Math.random() * 100),
+                    backgroundColor: 'rgba(74, 144, 226, 0.2)',
+                    borderColor: 'rgba(74, 144, 226, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(74, 144, 226, 1)'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        function updateChart() {
+            consumptionChart.data.labels = Array.from({ length: timeRange }, (_, i) => `${i + 1}h`);
+            consumptionChart.data.datasets[0].data = Array.from({ length: timeRange }, () => Math.random() * 100);
+            consumptionChart.update();
+        }
+    </script>
+</body>
+
+</html>
