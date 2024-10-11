@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AquaSave: Urban Water Conservation Dashboard</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script> <!-- Include D3.js -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -317,6 +318,27 @@
     flex-wrap: wrap; /* Allow wrapping for smaller screens */
 }
 
+.pie-chart-container {
+            width: 100%;
+            height: 620px; /* Adjusted height for the larger pie chart */
+            position: relative; /* Position relative to contain absolute children */
+            display: flex; /* Use flexbox to center contents */
+            justify-content: center; /* Center contents horizontally */
+            align-items: center; /* Center contents vertically */
+            margin: 0 auto; /* Center the container */
+        }
+
+        svg {
+            display: block; /* Ensures SVG is treated as a block element */
+            margin: 0 auto; /* Center the SVG within the container */
+        }
+
+        /* Styles for the summary container */
+        #waterUsageSummary {
+            margin-top: 20px;
+            font-family: 'Poppins', sans-serif; /* Use the Poppins font */
+        }
+
     </style>
 </head>
 
@@ -355,12 +377,15 @@
                 <h3>Goal History</h3>
                 <ul id="goal-history"></ul>
             </div>
-    
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             
             <div class="card">
                 <h2>Water Usage in the House</h2>
-                <canvas id="waterUsageChart" width="400" height="400"></canvas>
+                <div class="pie-chart-container">
+                    <svg id="waterUsageChart" width="400" height="400"></svg>
+                    <div id="waterUsageSummary"></div>
+                    <script src="assets/js/scripts.js"></script>
+
+                </div>
             </div>
     
             <div class="card">
@@ -625,46 +650,7 @@
             consumptionChart.data.datasets[0].data = Array.from({ length: timeRange }, () => Math.random() * 100);
             consumptionChart.update();
         }
-        const ctx = document.getElementById('waterUsageChart').getContext('2d');
-const chart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-        labels: ['Shower', 'Laundry', 'Dishes', 'Toilet', 'Garden', 'Other'],
-        datasets: [{
-            data: [30, 20, 15, 10, 15, 10],
-            backgroundColor: [
-                '#FF6384',
-                '#36A2EB',
-                '#FFCE56',
-                '#4BC0C0',
-                '#9966FF',
-                '#FF9F40'
-            ]
-        }]
-    },
-    options: {
-        layout: {
-            padding: {
-                top: -10,  // Adjust this value to move the chart up or down
-                left: 0,
-                right: 20,
-                bottom: 80
-            }
-        },
-        plugins: {
-            legend: {
-                position: 'right',  // Labels on the right
-                labels: {
-                    font: {
-                        size: 30,  // Increase this value for larger font size
-                        weight: 'bold' // Optional: make the text bold
-                    }
-                }
-            }
-        }
-    }
-});
-
+        // Get the canvas context for the water usage chart
     </script>
 </body>
 

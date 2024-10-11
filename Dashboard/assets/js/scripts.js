@@ -1,184 +1,67 @@
-let currentConsumption = 0;
-let dailyGoal = 200;
-const consumptionEl = document.getElementById('current-consumption');
-const goalEl = document.getElementById('daily-goal');
-const savingsPercentageEl = document.getElementById('water-savings-percentage');
+// Sample data for water usage in liters
+const data = [50, 30, 15, 5]; // Values for each section of the pie
+const labels = ['Bathroom', 'Kitchen', 'Garden', 'Laundry'];
 
-// Initialize charts
-const ctxConsumption = document.getElementById('water-consumption-chart').getContext('2d');
-const ctxSavings = document.getElementById('water-savings-chart').getContext('2d');
-const ctxGoal = document.getElementById('water-goal-chart').getContext('2d');
+// Define the width, height, and increased radius for the pie chart
+const width = 800; // Increased width
+const height = 800; // Increased height
+const radius = 350; // Increased radius
 
-let chartConsumption, chartSavings, chartGoal;
-let chartDataConsumption = Array(24).fill(0);
-let chartDataSavings = Array(24).fill(0);
-let chartDataGoal = Array(24).fill(dailyGoal); // Fill with the daily goal
+// Define color scale
+const color = d3.scaleOrdinal()
+    .domain(labels)
+    .range(['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)', 'rgba(75, 192, 192, 0.6)']);
 
-function updateConsumption() {
-    currentConsumption += Math.random() * 2; // Simulating random consumption
-    consumptionEl.textContent = `${Math.round(currentConsumption)} L`;
-    updateSavingsBadge();
-    updateChartConsumption();
-    updateChartSavings();
-    updateChartGoal();
+// Create the pie layout
+const pie = d3.pie();
+
+// Define the arc for the pie chart
+const arc = d3.arc()
+    .innerRadius(0)  // Set inner radius for pie (0 for a full pie)
+    .outerRadius(radius); // Use the increased radius
+
+// Create the SVG container
+const svg = d3.select('#waterUsageChart')
+    .attr('viewBox', `0 0 ${width} ${height}`)
+    .append('g')
+    .attr('transform', `translate(${width / 2}, ${height / 2})`); // Center the pie chart
+
+// Create the pie chart arcs
+const arcs = svg.selectAll('arc')
+    .data(pie(data)) // Bind data to the pie chart
+    .enter()
+    .append('g')
+    .attr('class', 'arc');
+
+// Append the path for each arc
+arcs.append('path')
+    .attr('d', arc)
+    .attr('fill', (d, i) => color(labels[i])); // Set the fill color based on label index
+
+// Append text labels to each arc
+arcs.append('text')
+    .attr('transform', (d) => `translate(${arc.centroid(d)})`) // Position the text in the center of the arc
+    .text((d, i) => labels[i]) // Set text to label
+    .style('text-anchor', 'middle') // Center the text
+    .style('font-size', '16px') // Increased font size
+    .style('fill', 'black'); // Set font color
+
+// Function to display water usage values next to the pie chart
+function displayWaterUsageSummary() {
+    const summaryContainer = d3.select('#waterUsageSummary');
+
+    // Append each label and value to the summary container
+    labels.forEach((label, i) => {
+        summaryContainer.append('div')
+            .style('display', 'flex') // Use flexbox for horizontal layout
+            .style('align-items', 'center') // Center items vertically
+            .style('margin', '5px 0') // Add some spacing between items
+            .html(`
+                <div style="width: 20px; height: 20px; background-color: ${color(label)}; margin-right: 10px;"></div>
+                <strong>${label}:</strong> ${data[i]} liters
+            `);
+    });
 }
 
-function setNewGoal() {
-    const newGoal = document.getElementById('goal-input').value;
-    if (newGoal && newGoal > 0) {
-        dailyGoal = parseInt(newGoal);
-        goalEl.textContent = `${dailyGoal} L`;
-        updateSavingsBadge();
-        updateChartGoal(); // Update goal chart
-    }
-}
-
-function updateSavingsBadge() {
-    const savingsPercentage = Math.max(0, Math.round((1 - currentConsumption / dailyGoal) * 100));
-    savingsPercentageEl.textContent = `${savingsPercentage}%`;
-}
-
-function updateChartConsumption() {
-    chartDataConsumption.push(currentConsumption);
-    chartDataConsumption.shift();
-
-    if (!chartConsumption) {
-        chartConsumption = new Chart(ctxConsumption, {
-            type: 'line',
-            data: {
-                labels: Array(24).fill('').map((_, i) => `${i}:00`),
-                datasets: [{
-                    label: 'Hourly Water Consumption (L)',
-                    data: chartDataConsumption,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    } else {
-        chartConsumption.data.datasets[0].data = chartDataConsumption;
-        chartConsumption.update();
-    }
-}
-
-function updateChartSavings() {
-    const savingsPercentage = Math.max(0, Math.round((1 - currentConsumption / dailyGoal) * 100));
-    chartDataSavings.push(savingsPercentage);
-    chartDataSavings.shift();
-
-    if (!chartSavings) {
-        chartSavings = new Chart(ctxSavings, {
-            type: 'bar',
-            data: {
-                labels: Array(24).fill('').map((_, i) => `${i}:00`),
-                datasets: [{
-                    label: 'Water Savings Percentage',
-                    data: chartDataSavings,
-                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                    borderColor: 'rgb(75, 192, 192)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    } else {
-        chartSavings.data.datasets[0].data = chartDataSavings;
-        chartSavings.update();
-    }
-}
-
-function updateChartGoal() {
-    chartDataGoal.push(dailyGoal);
-    chartDataGoal.shift();
-
-    if (!chartGoal) {
-        chartGoal = new Chart(ctxGoal, {
-            type: 'line',
-            data: {
-                labels: Array(24).fill('').map((_, i) => `${i}:00`),
-                datasets: [{
-                    label: 'Daily Water Goal (L)',
-                    data: chartDataGoal,
-                    borderColor: 'rgb(255, 99, 132)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    } else {
-        chartGoal.data.datasets[0].data = chartDataGoal;
-        chartGoal.update();
-    }
-}
-const ctx = document.getElementById('waterUsageChart').getContext('2d');
-const waterUsageChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-        labels: ['Shower', 'Laundry', 'Toilet', 'Dishwashing', 'Outdoor Use', 'Other'],
-        datasets: [{
-            label: 'Water Usage',
-            data: [30, 25, 20, 10, 10, 5], // Example data, you can replace these values
-            backgroundColor: [
-                'rgba(75, 192, 192, 0.7)',
-                'rgba(54, 162, 235, 0.7)',
-                'rgba(255, 206, 86, 0.7)',
-                'rgba(255, 99, 132, 0.7)',
-                'rgba(153, 102, 255, 0.7)',
-                'rgba(255, 159, 64, 0.7)'
-            ],
-            borderColor: [
-                'rgba(75, 192, 192, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(255, 99, 132, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                display: true,
-                position: 'top'
-            },
-            tooltip: {
-                callbacks: {
-                    label: function(tooltipItem) {
-                        return tooltipItem.label + ': ' + tooltipItem.raw + '%';
-                    }
-                }
-            }
-        }
-    }
-});
-
-// Simulate real-time updates
-setInterval(updateConsumption, 5000);
-
-// Initial update
-updateConsumption();
+// Call the function to display the summary
+displayWaterUsageSummary();
