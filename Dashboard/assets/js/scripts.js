@@ -132,6 +132,50 @@ function updateChartGoal() {
         chartGoal.update();
     }
 }
+const ctx = document.getElementById('waterUsageChart').getContext('2d');
+const waterUsageChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Shower', 'Laundry', 'Toilet', 'Dishwashing', 'Outdoor Use', 'Other'],
+        datasets: [{
+            label: 'Water Usage',
+            data: [30, 25, 20, 10, 10, 5], // Example data, you can replace these values
+            backgroundColor: [
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 206, 86, 0.7)',
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(153, 102, 255, 0.7)',
+                'rgba(255, 159, 64, 0.7)'
+            ],
+            borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top'
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(tooltipItem) {
+                        return tooltipItem.label + ': ' + tooltipItem.raw + '%';
+                    }
+                }
+            }
+        }
+    }
+});
 
 // Simulate real-time updates
 setInterval(updateConsumption, 5000);

@@ -204,6 +204,43 @@
             background-color: #cd7f32;
             color: white;
         }
+        .action-links {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between items */
+}
+
+.action-links li {
+    padding: 15px;
+    background-color: rgba(0, 123, 255, 0.1); /* Light blue background */
+    border: 2px solid var(--primary-color); /* Border to create box effect */
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1.8rem;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: inline-block;
+}
+
+.action-links li:hover {
+    background-color: var(--primary-color); /* Change background on hover */
+    color: white; /* White text on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Box shadow on hover */
+}
+
+.action-info {
+    display: none;
+    margin-top: 15px;
+    padding: 15px;
+    font-size: 1.2rem;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+}
+
     </style>
 </head>
 
@@ -240,13 +277,10 @@
                 </div>
             </div>
             
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <div class="card">
-                <h2>Water Saving Badge</h2>
-                <div id="savings-badge">
-                    <span id="savings-percentage">0%</span>
-                    <span>Saved</span>
-                </div>
-                
+                <h2>Water Usage in the House</h2>
+                <canvas id="waterUsageChart" width="400" height="400"></canvas>
             </div>
             <div class="card">
                 <h2>Neighborhood Leaderboard</h2>
@@ -256,6 +290,20 @@
                     <li>3. Green Apartment - 10% saved</li>
                     <li>4. Water Warriors - 8% saved</li>
                     <li>5. Eco Enthusiasts - 7% saved</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>Things to Do When Water is Wasted</h2>
+                <ul class="action-links">
+                    <li onclick="openInNewTab('info1')">Report Water Waste</li>
+                    <li onclick="openInNewTab('info2')">Fix Leaks</li>
+                    <li onclick="openInNewTab('info3')">Educate Others</li>
+                    <li onclick="openInNewTab('info4')">Use Water Efficiently</li>
+                    <li onclick="openInNewTab('info5')">Install Water-Saving Devices</li>
+                    <li onclick="openInNewTab('info6')">Check Your Water Bill</li>
+                    <li onclick="openInNewTab('info7')">Collect Rainwater</li>
+                    <li onclick="openInNewTab('info8')">Water Plants Smartly</li>
+                    <li onclick="openInNewTab('info9')">Take Shorter Showers</li>
                 </ul>
             </div>
         </div>
@@ -295,14 +343,37 @@
             savingsPercentageEl.textContent = `${savingsPercentage}%`;
         }
 
+        function openInNewTab(action) {
+    const links = {
+        'info1': 'https://www.epa.gov/report-environmental-violations',
+        'info2': 'https://www.water.org/our-impact/water-and-sanitation-leaks/',
+        'info3': 'https://www.worldwildlife.org/initiatives/freshwater',
+        'info4': 'https://www.greenpeace.org/international/act/educate-about-climate-change/',
+        'info5': 'https://www.nrdc.org/stories/how-you-can-stop-water-pollution',
+        'info6': 'https://www.who.int/health-topics/water',
+        'info7': 'https://www.nationalgeographic.com/environment/freshwater/',
+        'info8': 'https://www.unwater.org/water-facts/water-and-environment',
+        'info9': 'https://www.wwf.org.uk/learn/water-scarcity'
+    };
+
+    // Open the respective link in a new tab
+    const url = links[action];
+    if (url) {
+        window.open(url, '_blank');
+    } else {
+        alert('No link available for this action.');
+    }
+}
+
         function updateTimeRange() {
             timeRange = parseInt(document.getElementById('time-range').value);
+            console.log("Time range updated to:", timeRange);
             updateChart();
         }
 
         // Initialize and update the chart
-        const ctx = document.getElementById('consumption-chart').getContext('2d');
-        const consumptionChart = new Chart(ctx, {
+        const waterUsageCtx = document.getElementById('consumption-chart').getContext('2d');
+        const waterUsageChart = new Chart(waterUsageCtx, {
             type: 'line',
             data: {
                 labels: Array.from({ length: timeRange }, (_, i) => `${i + 1}h`),
@@ -329,6 +400,46 @@
             consumptionChart.data.datasets[0].data = Array.from({ length: timeRange }, () => Math.random() * 100);
             consumptionChart.update();
         }
+        const ctx = document.getElementById('waterUsageChart').getContext('2d');
+const chart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Shower', 'Laundry', 'Dishes', 'Toilet', 'Garden', 'Other'],
+        datasets: [{
+            data: [30, 20, 15, 10, 15, 10],
+            backgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56',
+                '#4BC0C0',
+                '#9966FF',
+                '#FF9F40'
+            ]
+        }]
+    },
+    options: {
+        layout: {
+            padding: {
+                top: -10,  // Adjust this value to move the chart up or down
+                left: 0,
+                right: 20,
+                bottom: 80
+            }
+        },
+        plugins: {
+            legend: {
+                position: 'right',  // Labels on the right
+                labels: {
+                    font: {
+                        size: 30,  // Increase this value for larger font size
+                        weight: 'bold' // Optional: make the text bold
+                    }
+                }
+            }
+        }
+    }
+});
+
     </script>
 </body>
 
