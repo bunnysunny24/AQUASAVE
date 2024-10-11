@@ -7,97 +7,98 @@
     <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
     <style>
         :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #50c878;
-            --text-color: #333333;
-            --input-bg-color: #f1f1f1;
-            --button-bg-color: #4a90e2;
-            --button-hover-bg-color: #3a78c2;
-            --border-radius: 15px;
-            --input-focus-color: #4a90e2;
-        }
-    
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #87CEEB, #1E90FF, #00BFFF);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    
-        .login-container {
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 50px; /* Increased padding */
-            border-radius: var(--border-radius);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            width: 500px; /* Increased width */
-            text-align: center;
-        }
-    
-        h2 {
-            color: var(--primary-color);
-            margin-bottom: 30px; /* More space below heading */
-            font-weight: 600;
-            font-size: 2.5em; /* Larger font size */
-        }
-    
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 20px; /* Increased padding */
-            margin: 15px 0; /* Increased margin */
-            border: 2px solid transparent;
-            background-color: var(--input-bg-color);
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            font-size: 1.1em; /* Slightly larger font size */
-            transition: border-color 0.3s ease;
-        }
-    
-        input:focus {
-            border-color: var(--input-focus-color);
-            outline: none;
-            box-shadow: 0 0 10px rgba(74, 144, 226, 0.5); /* Slightly larger focus glow */
-        }
-    
-        button {
-            width: 100%;
-            padding: 18px; /* Larger button padding */
-            background-color: var(--button-bg-color);
-            color: white;
-            font-size: 1.3em; /* Slightly larger font */
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-top: 20px;
-        }
-    
-        button:hover {
-            background-color: var(--button-hover-bg-color);
-        }
-    
-        .back-to-home {
-            display: block;
-            margin-top: 25px; /* More space above link */
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 1em; /* Larger font for link */
-        }
-    
-        .back-to-home:hover {
-            text-decoration: underline;
-        }
-    
-        .error-message {
-            color: red;
-            font-size: 1em;
-            margin-top: 15px; /* More space for error message */
-        }
+    --primary-color: #4a90e2;
+    --secondary-color: #50c878;
+    --text-color: #333333;
+    --input-bg-color: #f1f1f1;
+    --button-bg-color: #4a90e2;
+    --button-hover-bg-color: #3a78c2;
+    --border-radius: 15px;
+    --input-focus-color: #4a90e2;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #87CEEB, #1E90FF, #00BFFF);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 70px; /* Increased padding */
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    width: 600px; /* Increased width */
+    text-align: center;
+}
+
+h2 {
+    color: var(--primary-color);
+    margin-bottom: 40px; /* More space below heading */
+    font-weight: 600;
+    font-size: 3em; /* Larger font size */
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 25px; /* Increased padding */
+    margin: 20px 0; /* Increased margin */
+    border: 2px solid transparent;
+    background-color: var(--input-bg-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    font-size: 1.3em; /* Larger font size */
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    border-color: var(--input-focus-color);
+    outline: none;
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.5); /* Slightly larger focus glow */
+}
+
+button {
+    width: 100%;
+    padding: 20px; /* Larger button padding */
+    background-color: var(--button-bg-color);
+    color: white;
+    font-size: 1.5em; /* Slightly larger font */
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 25px; /* Increased margin for button */
+}
+
+button:hover {
+    background-color: var(--button-hover-bg-color);
+}
+
+.back-to-home {
+    display: block;
+    margin-top: 30px; /* More space above link */
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1.1em; /* Larger font for link */
+}
+
+.back-to-home:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: red;
+    font-size: 1.1em; /* Slightly larger font for error message */
+    margin-top: 15px; /* More space for error message */
+}
+
     </style>
     
 </head>

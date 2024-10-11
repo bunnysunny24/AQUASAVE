@@ -265,31 +265,36 @@
 .rewards-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; /* Center items vertically */
+    padding-top: 40px; /* Adjust this value to move badges down */
 }
 
 .badge-row {
     display: flex;
-    justify-content: center;
-    margin: 10px 0; /* Space between rows */
+    justify-content: center; /* Center items horizontally */
+    margin: 50px 0; /* Increased space between rows */
 }
 
 .badge {
+    display: flex; /* Use flexbox for centering */
+    flex-direction: column; /* Stack the image and text vertically */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
     background-color: #f0f0f0;
     border: 2px solid #ccc;
     border-radius: 8px;
     padding: 10px;
     text-align: center;
-    width: 80px;
-    height: 100px;
+    width: 80px; /* Width of the badge */
+    height: 120px; /* Adjusted height for more space */
     position: relative;
     transition: transform 0.3s ease;
-    margin: 0 10px; /* Space between badges */
+    margin: 0 130px; /* Space between badges */
 }
 
 .badge img {
-    width: 50px; /* Badge image size */
-    height: 50px;
+    width: 120px; /* Adjusted badge image size */
+    height: 120px; /* Adjusted badge image size */
 }
 
 .badge.locked {
@@ -439,24 +444,76 @@
             
     
     <script>
-        let currentConsumption = 0;
-        let dailyGoal = 200;
-        let timeRange = 24;
-        const consumptionEl = document.getElementById('current-consumption');
-        const goalEl = document.getElementById('daily-goal');
-        const savingsPercentageEl = document.getElementById('savings-percentage');
+        
+    let currentConsumption = 0;
+    let dailyGoal = 200;
+    let timeRange = 24;
+    const consumptionEl = document.getElementById('current-consumption');
+    const chartCanvas = document.getElementById('consumption-chart').getContext('2d'); // New variable for the chart context
 
-        function updateConsumption() {
-            const input = document.getElementById('consumption-input');
-            const newConsumption = parseFloat(input.value);
-            if (!isNaN(newConsumption) && newConsumption >= 0) {
-                currentConsumption = newConsumption;
-                consumptionEl.textContent = `${currentConsumption.toFixed(1)} L`;
-                updateSavingsBadge();
-                updateChart();
-                input.value = '';
+    // Sample data for demonstration
+    let chartData = {
+        labels: [],
+        datasets: [{
+            label: 'Water Consumption (L)',
+            data: [],
+            backgroundColor: 'rgba(74, 144, 226, 0.5)',
+            borderColor: 'rgba(74, 144, 226, 1)',
+            borderWidth: 1,
+        }]
+    };
+
+    const consumptionChart = new Chart(chartCanvas, {
+        type: 'line',
+        data: chartData,
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                }
             }
         }
+    });
+
+    function updateConsumption() {
+        const input = document.getElementById('consumption-input');
+        const newConsumption = parseFloat(input.value);
+        if (!isNaN(newConsumption) && newConsumption >= 0) {
+            currentConsumption = newConsumption;
+            consumptionEl.textContent = `${currentConsumption.toFixed(1)} L`;
+            updateChart();
+            input.value = '';
+        }
+    }
+
+    function updateTimeRange() {
+        timeRange = document.getElementById('time-range').value;
+        fetchConsumptionData(); // Fetch new data based on the time range
+    }
+
+    function fetchConsumptionData() {
+        // Simulate fetching data based on the selected time range
+        const consumptionData = []; // Replace this with actual data fetching logic
+
+        // Create sample data for the chart
+        const numLabels = timeRange === '24' ? 24 : timeRange === '48' ? 48 : 168;
+        for (let i = 0; i < numLabels; i++) {
+            consumptionData.push(Math.floor(Math.random() * 50)); // Random consumption data
+        }
+
+        updateChart(consumptionData);
+    }
+
+    function updateChart(consumptionData = []) {
+        // Clear existing data
+        consumptionChart.data.labels = Array.from({ length: consumptionData.length }, (_, i) => i + 1);
+        consumptionChart.data.datasets[0].data = consumptionData.length > 0 ? consumptionData : [currentConsumption];
+        consumptionChart.update();
+    }
+
+    // Initial fetch for the chart
+    fetchConsumptionData();
 
         const goalHistory = [];
 
