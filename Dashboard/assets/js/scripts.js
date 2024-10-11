@@ -3,9 +3,9 @@ const data = [50, 30, 15, 5]; // Values for each section of the pie
 const labels = ['Bathroom', 'Kitchen', 'Garden', 'Laundry'];
 
 // Define the width, height, and increased radius for the pie chart
-const width = 800; // Increased width
-const height = 800; // Increased height
-const radius = 350; // Increased radius
+const width = 1600; // Further increased width
+const height = 1600; // Further increased height
+const radius = Math.min(width, height) / 2 - 20; // Set radius dynamically based on width/height
 
 // Define color scale
 const color = d3.scaleOrdinal()
@@ -22,7 +22,7 @@ const arc = d3.arc()
 
 // Create the SVG container
 const svg = d3.select('#waterUsageChart')
-    .attr('viewBox', `0 0 ${width} ${height}`)
+    .attr('viewBox', `0 0 ${width} ${height}`) // Set the viewBox
     .append('g')
     .attr('transform', `translate(${width / 2}, ${height / 2})`); // Center the pie chart
 
@@ -43,7 +43,7 @@ arcs.append('text')
     .attr('transform', (d) => `translate(${arc.centroid(d)})`) // Position the text in the center of the arc
     .text((d, i) => labels[i]) // Set text to label
     .style('text-anchor', 'middle') // Center the text
-    .style('font-size', '16px') // Increased font size
+    .style('font-size', '20px') // Independent font size for text
     .style('fill', 'black'); // Set font color
 
 // Function to display water usage values next to the pie chart
