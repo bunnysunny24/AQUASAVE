@@ -96,6 +96,8 @@
             margin-top: 0;
             font-weight: 600;
             font-size: 2em;
+            text-align: center;
+
         }
 
         .consumption {
@@ -142,6 +144,11 @@
         .card p {
     font-size: 1.4em; /* Increased font size for paragraphs */
     line-height: 1.6;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    width: 300px; /* Adjust as needed */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
         .input-group button:hover {
@@ -174,36 +181,38 @@
         }
 
         #leaderboard {
-            list-style-type: none;
-            padding: 0;
-        }
+    list-style-type: none;
+    padding: 0;
+}
 
-        #leaderboard li {
-            background-color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 10px;
-            transition: transform 0.3s ease;
-        }
+#leaderboard li {
+    background-color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+    font-size: 1.2em; /* Increase font size */
+}
 
-        #leaderboard li:hover {
-            transform: translateX(5px);
-        }
+#leaderboard li:hover {
+    transform: translateX(5px);
+}
 
-        #leaderboard li:nth-child(1) {
-            background-color: gold;
-            color: #333;
-        }
+#leaderboard li:nth-child(1) {
+    background-color: gold;
+    color: #333;
+}
 
-        #leaderboard li:nth-child(2) {
-            background-color: silver;
-            color: #333;
-        }
+#leaderboard li:nth-child(2) {
+    background-color: silver;
+    color: #333;
+}
 
-        #leaderboard li:nth-child(3) {
-            background-color: #cd7f32;
-            color: white;
-        }
+#leaderboard li:nth-child(3) {
+    background-color: #cd7f32;
+    color: white;
+}
+
         .action-links {
     list-style-type: none;
     padding: 0;
@@ -218,7 +227,7 @@
     border: 2px solid var(--primary-color); /* Border to create box effect */
     border-radius: 8px;
     cursor: pointer;
-    color: var(--primary-color);
+    color: darkblue;
     text-decoration: none;
     font-size: 1.8rem;
     transition: all 0.3s ease;
@@ -241,6 +250,68 @@
     border-radius: 5px;
 }
 
+#goal-history {
+    list-style-type: none;
+    padding: 0;
+}
+
+#goal-history li {
+    background: #f9f9f9;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.rewards-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.badge-row {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0; /* Space between rows */
+}
+
+.badge {
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    width: 80px;
+    height: 100px;
+    position: relative;
+    transition: transform 0.3s ease;
+    margin: 0 10px; /* Space between badges */
+}
+
+.badge img {
+    width: 50px; /* Badge image size */
+    height: 50px;
+}
+
+.badge.locked {
+    opacity: 0.5; /* Grey out locked badges */
+    pointer-events: none; /* Disable interaction */
+}
+
+.badge.unlocked:hover {
+    transform: translateY(-5px); /* Move up on hover for unlocked badges */
+}
+
+.badge.locked:hover {
+    transform: none; /* No hover effect for locked badges */
+}
+
+
+.cards-container {
+    display: flex; /* Use flexbox to align cards side by side */
+    gap: 20px; /* Add space between cards */
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+}
+
     </style>
 </head>
 
@@ -249,7 +320,7 @@
         <h1>AquaSave: Urban Water Conservation Dashboard</h1>
         <a href="login.html">Go to Login</a>
     </header>
-    <div class="container">
+    <div class="cards-container">
         <div class="dashboard">
             <div class="card">
                 <h2>Current Consumption</h2>
@@ -268,6 +339,7 @@
                 </div>
                 <canvas id="consumption-chart"></canvas>
             </div>
+    
             <div class="card">
                 <h2>Daily Goal</h2>
                 <div class="consumption" id="daily-goal">200 L</div>
@@ -275,13 +347,17 @@
                     <input type="number" id="goal-input" placeholder="Set new goal (in liters)">
                     <button onclick="setNewGoal()">Set Goal</button>
                 </div>
+                <h3>Goal History</h3>
+                <ul id="goal-history"></ul>
             </div>
-            
+    
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            
             <div class="card">
                 <h2>Water Usage in the House</h2>
                 <canvas id="waterUsageChart" width="400" height="400"></canvas>
             </div>
+    
             <div class="card">
                 <h2>Neighborhood Leaderboard</h2>
                 <ul id="leaderboard">
@@ -290,8 +366,14 @@
                     <li>3. Green Apartment - 10% saved</li>
                     <li>4. Water Warriors - 8% saved</li>
                     <li>5. Eco Enthusiasts - 7% saved</li>
+                    <li>6. Sustainable Smiths - 6% saved</li>
+                    <li>7. Green Thumbs - 5% saved</li>
+                    <li>8. Water Savers Inc. - 4% saved</li>
+                    <li>9. The Aquatic Team - 3% saved</li>
+                    <li>10. The Eco-Friendly Gang - 2% saved</li>
                 </ul>
             </div>
+    
             <div class="card">
                 <h2>Things to Do When Water is Wasted</h2>
                 <ul class="action-links">
@@ -306,9 +388,56 @@
                     <li onclick="openInNewTab('info9')">Take Shorter Showers</li>
                 </ul>
             </div>
-        </div>
-    </div>
-
+    
+            <div class="card rewards-card">
+                <h2>Rewards Earned</h2>
+                <div class="rewards-container">
+                    <div class="badge-row">
+                        <div class="badge unlocked">
+                            <img src="badge1.png" alt="Water Saver Badge 1">
+                            <p>Water Saver</p>
+                        </div>
+                        <div class="badge unlocked">
+                            <img src="badge2.png" alt="Water Saver Badge 2">
+                            <p>Water Hero</p>
+                        </div>
+                        <div class="badge unlocked">
+                            <img src="badge3.png" alt="Water Saver Badge 3">
+                            <p>Water Champion</p>
+                        </div>
+                    </div>
+                    <div class="badge-row">
+                        <div class="badge locked">
+                            <img src="badge4.png" alt="Water Saver Badge 4">
+                            <p>Water Legend</p>
+                        </div>
+                        <div class="badge locked">
+                            <img src="badge5.png" alt="Water Saver Badge 5">
+                            <p>Water Guardian</p>
+                        </div>
+                        <div class="badge locked">
+                            <img src="badge6.png" alt="Water Saver Badge 6">
+                            <p>Water Master</p>
+                        </div>
+                    </div>
+                    <div class="badge-row">
+                        <div class="badge locked">
+                            <img src="badge7.png" alt="Water Saver Badge 7">
+                            <p>Water Protector</p>
+                        </div>
+                        <div class="badge locked">
+                            <img src="badge8.png" alt="Water Saver Badge 8">
+                            <p>Water Preserver</p>
+                        </div>
+                        <div class="badge locked">
+                            <img src="badge9.png" alt="Water Saver Badge 9">
+                            <p>Water Defender</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+    
     <script>
         let currentConsumption = 0;
         let dailyGoal = 200;
@@ -329,15 +458,54 @@
             }
         }
 
-        function setNewGoal() {
-            const newGoal = document.getElementById('goal-input').value;
-            if (newGoal && newGoal > 0) {
-                dailyGoal = parseInt(newGoal);
-                goalEl.textContent = `${dailyGoal} L`;
-                updateSavingsBadge();
-            }
-        }
+        const goalHistory = [];
 
+    // Function to set a new goal
+    function setNewGoal() {
+        const goalInput = document.getElementById('goal-input');
+        const goal = goalInput.value;
+
+        if (goal) {
+            // Record the current goal
+            const currentGoal = {
+                goal: parseInt(goal),
+                achieved: checkIfAchieved(parseInt(document.getElementById('daily-goal').textContent)),
+                date: new Date().toLocaleString() // Store the date when goal was set
+            };
+
+            // Add the current goal to the history
+            goalHistory.push(currentGoal);
+
+            // Update the displayed daily goal
+            document.getElementById('daily-goal').textContent = `${goal} L`; // Update displayed goal
+
+            // Clear the input field
+            goalInput.value = '';
+
+            // Update the goal history display
+            updateGoalHistory();
+        } else {
+            alert('Please enter a valid goal!');
+        }
+    }
+
+    // Function to check if the goal was achieved
+    function checkIfAchieved(dailyConsumption) {
+        const lastGoal = goalHistory.length ? goalHistory[goalHistory.length - 1].goal : 0;
+        return dailyConsumption >= lastGoal; // Check if daily consumption meets or exceeds the last goal
+    }
+
+    // Function to update the goal history display
+    function updateGoalHistory() {
+        const goalHistoryList = document.getElementById('goal-history');
+        goalHistoryList.innerHTML = ''; // Clear existing history display
+
+        goalHistory.forEach((entry) => {
+            const li = document.createElement('li');
+            li.textContent = `Goal: ${entry.goal} L - Achieved: ${entry.achieved ? 'Yes' : 'No'} - Date: ${entry.date}`;
+            goalHistoryList.appendChild(li);
+        });
+    }
         function updateSavingsBadge() {
             const savingsPercentage = Math.max(0, Math.round((1 - currentConsumption / dailyGoal) * 100));
             savingsPercentageEl.textContent = `${savingsPercentage}%`;
