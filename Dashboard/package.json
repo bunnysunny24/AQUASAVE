@@ -3,14 +3,23 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+<<<<<<< HEAD
     "start": "serve .",
     "test": "echo \"Error: no test specified\" && exit 1"
+=======
+    "start": "react-scripts start",          
+    "build": "react-scripts build",          
+    "test": "react-scripts test",          
+    "eject": "react-scripts eject"           
+>>>>>>> 224acf114a48c2faf01ec4bfe49e05f60fd7bef7
   },
-  "author": "",
+  "author": "",                               
   "license": "ISC",
-  "description": "",
+  "description": "",                         
   "dependencies": {
-    "react-scripts": "^5.0.1",
-    "serve": "^14.0.1"
-  }
+    "react": "^18.0.0",                      
+    "react-dom": "^18.0.0",                   
+    "react-scripts": "^5.0.1",                
+    "serve": "^14.0.1"                        
+  },
 }
