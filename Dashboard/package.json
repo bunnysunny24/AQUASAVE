@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "serve -s build",   // Use the build folder for serving static files
-    "build": "react-scripts build", // Add this line to build your React app
+    "start": "serve -s build",   
+    "build": "react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
