@@ -3,15 +3,22 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "serve -s build",  
-    "build": "react-scripts build",  
-    "test": "echo"
+    "start": "react-scripts start",          // Start the app in development mode
+    "build": "react-scripts build",          // Build the app for production
+    "test": "react-scripts test",            // Run tests
+    "eject": "react-scripts eject"           // Eject from create-react-app (optional)
   },
-  "author": "",
+  "author": "",                               // Add your name or organization here
   "license": "ISC",
-  "description": "",
+  "description": "",                          // Provide a brief description of your app
   "dependencies": {
-    "react-scripts": "^5.0.1",
-    "serve": "^14.0.1"
+    "react": "^18.0.0",                       // React library
+    "react-dom": "^18.0.0",                   // React DOM library
+    "react-scripts": "^5.0.1",                // Create React App scripts
+    "serve": "^14.0.1"                        // Static server for serving the built files
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",                // Type definitions for React (if using TypeScript)
+    "@types/react-dom": "^18.0.0"             // Type definitions for React DOM (if using TypeScript)
   }
 }
