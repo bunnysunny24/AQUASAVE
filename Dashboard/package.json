@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "serve .",
+    "start": "serve -s build",   // Use the build folder for serving static files
+    "build": "react-scripts build", // Add this line to build your React app
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -11,6 +12,6 @@
   "description": "",
   "dependencies": {
     "react-scripts": "^5.0.1",
-    "serve": "^14.0.1" 
+    "serve": "^14.0.1"
   }
 }
